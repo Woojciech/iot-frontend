@@ -1,13 +1,38 @@
 import React, { useState } from 'react'
+import { useEffect } from 'react'
+import { useParams } from 'react-router'
+import axios from "axios"
 
 export const Home = () => {
-    const [account, setAccount] = useState({ idKonta: 3, bilans: 3000 })
+    const { accountId } = useParams()
+    const client = axios.create({
+        baseURL: "http://localhost:5000"
+    })
+
+    const [account, setAccount] = useState({ 
+        // idKonta: 3, bilans: 3000 
+    })
     const [transactions, setTransactions] = useState([
-        { idTransakcji: 1, idKonta: 3, czyWplata: true, kwota: 300, stanKonta: 300 },
-        { idTransakcji: 2, idKonta: 3, czyWplata: false, kwota: 100, stanKonta: 200 },
-        { idTransakcji: 3, idKonta: 3, czyWplata: true, kwota: 300, stanKonta: 500 },
-        { idTransakcji: 4, idKonta: 3, czyWplata: true, kwota: 300, stanKonta: 800 }
+        // { idTransakcji: 1, idKonta: 3, czyWplata: true, kwota: 300, stanKonta: 300 },
+        // { idTransakcji: 2, idKonta: 3, czyWplata: false, kwota: 100, stanKonta: 200 },
+        // { idTransakcji: 3, idKonta: 3, czyWplata: true, kwota: 300, stanKonta: 500 },
+        // { idTransakcji: 4, idKonta: 3, czyWplata: true, kwota: 300, stanKonta: 800 }
     ])
+
+
+    useEffect(() => {
+        console.log('Fetching data for accountId: ' + accountId)
+        fetchData();
+    }, [])
+    
+    const fetchData = async () => {
+        const formData = await client.get("/bank/data/" + accountId)
+            .catch((error) => {});
+
+        console.log(formData);
+        setAccount(formData?.data?.account)
+        setTransactions(formData?.data?.transactions)
+    }
 
     return (
         <div className="container mt-5 mb-4">
@@ -30,16 +55,16 @@ export const Home = () => {
                     </thead>
                     <tbody>
                         {
-                            transactions.map((transaction, idx) => (
+                            transactions?.map((transaction, idx) => (
                                 <tr> 
-                                    <th scope="row">{transaction.idTransakcji}</th>
-                                    <td>{transaction.kwota}</td>
-                                    <td className={ transaction.czyWplata ? 'text-success ': 'text-danger'}>
+                                    <th scope="row">{transaction?.idTransakcji}</th>
+                                    <td>{transaction?.kwota}</td>
+                                    <td className={ transaction?.czyWplata ? 'text-success ': 'text-danger'}>
                                         {
-                                            transaction.czyWplata ? "Uznanie" : "Obciążenie"
+                                            transaction?.czyWplata ? "Uznanie" : "Obciążenie"
                                         }
                                     </td>
-                                    <td>{transaction.stanKonta}</td>
+                                    <td>{transaction?.stanKonta}</td>
                                 </tr>
                             ))
                         }
