@@ -47,24 +47,32 @@ export const Home = () => {
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">Id</th>
+                            <th scope="col">Id Transakcji</th>
+                            <th scope="col">Id Konta</th>
                             <th scope="col">Kwota</th>
                             <th scope="col">Rodzaj</th>
-                            <th scope="col">Stan</th>
+                            <th scope="col">Stan Konta</th>
+                            <th scope="col">Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         {
                             transactions?.map((transaction, idx) => (
                                 <tr> 
-                                    <th scope="row">{transaction?.idTransakcji}</th>
-                                    <td>{transaction?.kwota}</td>
-                                    <td className={ transaction?.czyWplata ? 'text-success ': 'text-danger'}>
+                                    <td>{transaction?.idTransakcji}</td>
+                                    <td>{transaction?.idKonta}</td>
+                                    <td>{transaction?.wartoscTransakcji}</td>
+                                    <td className={ transaction?.czyWplata ? 'text-success fw-bold': 'text-danger fw-bold'}>
                                         {
                                             transaction?.czyWplata ? "Uznanie" : "Obciążenie"
                                         }
                                     </td>
-                                    <td>{transaction?.stanKonta}</td>
+                                    <td>{account?.bilans}</td>
+                                    <td className={ transaction?.czyUdana ? 'text-success fw-bold': 'text-danger fw-bold' }>
+                                        {
+                                            transaction?.czyUdana ? "Udana" : "Nieudana"
+                                        }
+                                    </td>
                                 </tr>
                             ))
                         }
